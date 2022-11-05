@@ -1,0 +1,50 @@
+{
+  "name": "data-viz-interview",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "prestart": "npm install",
+    "build": "vite build",
+    "pretest": "npm install && npm run build",
+    "start": "node app.js",
+    "dev": "vite",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "vite": "^3.2.2",
+    "@types/d3": "^7.4.0",
+    "@types/d3-array": "^3.0.3",
+    "@types/d3-shape": "^3.1.0",
+    "@types/d3-scale": "^4.0.2",
+    "@types/d3-interpolate": "^3.0.1",
+    "@types/d3-color": "^3.1.0",
+    "@types/d3-format": "^3.0.1",
+    "@types/d3-selection": "^3.0.3",
+    "@types/d3-time": "^3.0.0",
+    "@types/d3-time-format": "^4.0.0",
+    "@types/d3-random": "^3.0.1",
+    "@types/d3-axis": "^3.0.1",
+    "@types/d3-ease": "^3.0.0",
+    "@types/node": "^18.11.9",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "latest",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "d3": "^7.6.1",
+    "d3-array": "^3.2.0",
+    "d3-shape": "^3.1.0",
+    "d3-scale": "^4.0.2",
+    "d3-interpolate": "^3.0.1",
+    "d3-color": "^3.1.0",
+    "d3-format": "^3.1.0",
+    "d3-selection": "^3.0.0",
+    "d3-time": "^3.0.0",
+    "d3-time-format": "^3.0.0",
+    "d3-random": "^3.0.1",
+    "d3-axis": "^3.0.0",
+    "d3-ease": "^3.0.1"
+  }
+}
