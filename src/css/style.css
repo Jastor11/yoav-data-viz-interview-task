@@ -108,7 +108,7 @@ html, body {
 .card {
   background: white;
   background: var(--card-background-color);
-  /* color: black; */
+=
   max-width: 750px;
   border-radius: 0.26rem;
   border: solid 1px var(--card-border-color);
@@ -116,11 +116,6 @@ html, body {
   box-shadow: var(--card-box-shadow);
 }
 
-.card p,
-.card h3 {
-  /* color: hsl(205deg, 30%, 15%); */
-  /* color: #34495e; */
-}
 
 #dashboard {
   display: flex;
@@ -129,11 +124,6 @@ html, body {
 }
 
 #dashboard .dropdowns {
-  /* display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: 1rem; 
-  max-width: 760px; */
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -142,7 +132,6 @@ html, body {
 #dashboard .viz {
   border-radius: .2rem;
   display: flex;
-  /* flex-direction: column; */
   align-items: center;
   flex-wrap: wrap;
   margin: -0.5rem;
@@ -154,8 +143,9 @@ html, body {
 }
 
 
-#dashboard .viz #scatterplot {
+#dashboard .viz #dashboard-plot1 {
   height: 500px;
+  max-height: 500px;
   width: 500px;
   position: relative;
 
@@ -164,8 +154,8 @@ html, body {
   margin: 0.5rem;  
 }
 
-#dashboard .viz #groupedbar {
-  /* width: 100%; */
+#dashboard .viz #dashboard-plot2 {
+  width: 100%;
   height: 100%;
   height: 500px;
   flex: 1;
@@ -178,7 +168,7 @@ html, body {
   margin: 0.5rem;
 }
 
-#dashboard .viz #timeline {
+#dashboard .viz #dashboard-plot3 {
   width: 100%;
   height: 100%;
   height: 500px;

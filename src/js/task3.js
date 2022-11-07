@@ -3,20 +3,19 @@ import * as d3 from "d3"
 import * as d3Array from "d3-array"
 import * as d3TimeFormat from "d3-time-format"
 
-type Datum = typeof data[number]
 const dateParser = d3TimeFormat.timeParse("%Y")
-const yearAccessor = (d: Datum) => d.Year
-const medalAccessor = (d: Datum) => d.Medal
-const ageAccessor = (d: Datum) => d.Age
-const heightAccessor = (d: Datum) => d.Height
-const weightAccessor = (d: Datum) => d.Weight
-const genderAccessor = (d: Datum) => d.Gender
-const sportAccessor = (d: Datum) => d.Sport
-const countryAccessor = (d: Datum) => d.Team
+const yearAccessor = (d) => d.Year
+const medalAccessor = (d) => d.Medal
+const ageAccessor = (d) => d.Age
+const heightAccessor = (d) => d.Height
+const weightAccessor = (d) => d.Weight
+const genderAccessor = (d) => d.Gender
+const sportAccessor = (d) => d.Sport
+const countryAccessor = (d) => d.Team
 
 // 5. Build an Interactive Dashboard
 
-function combineChartDimensions(dimensions: any) {
+function combineChartDimensions(dimensions) {
   const parsedDimensions = {
     height: dimensions.height,
     width: dimensions.width,
@@ -34,7 +33,7 @@ function combineChartDimensions(dimensions: any) {
   }
 }
 
-function getFilteredData(dataset: typeof data) {
+function getFilteredData(dataset) {
   let filteredData = dataset
   if (state.year !== "None") {
     filteredData = filteredData.filter((d) => yearAccessor(d) === +state.year)
@@ -59,9 +58,9 @@ const CHART_COLORS = [
   "--chart-8",
   "--chart-9",
   "--chart-10",
-] as const
+]
 
-function getAggregatedData(dataset: typeof data) {
+function getAggregatedData(dataset) {
   const groupedData = d3Array.group(dataset, countryAccessor, yearAccessor)
   const groupedByCountry = Object.fromEntries(groupedData.entries())
 
@@ -69,9 +68,9 @@ function getAggregatedData(dataset: typeof data) {
     Object.entries(groupedByCountry).map(([country, years], idx) => {
       const color = CHART_COLORS[idx % CHART_COLORS.length]
 
-      const groupedByYear = Object.fromEntries(Array.from(years as any)) as Record<string, Datum[]>
+      const groupedByYear = Object.fromEntries(Array.from(years))
 
-      const yearlyAggregations = Object.entries(groupedByYear).map(([year, items]: [string, typeof data]) => {
+      const yearlyAggregations = Object.entries(groupedByYear).map(([year, items]) => {
         return {
           year: +year,
           country,
@@ -92,7 +91,7 @@ function getAggregatedData(dataset: typeof data) {
           ...groupedByYear,
           yearlyAggregations: yearlyAggregations,
         },
-      ] as [string, typeof groupedByYear & { yearlyAggregations: typeof yearlyAggregations }]
+      ]
     })
   )
 
@@ -101,7 +100,7 @@ function getAggregatedData(dataset: typeof data) {
       const allYears = Object.entries(years)
         .filter(([year, items]) => year !== "yearlyAggregations")
         .map(([year, items]) => items)
-        .flat() as Datum[]
+        .flat()
 
       const color = CHART_COLORS[i % CHART_COLORS.length]
 
@@ -132,7 +131,7 @@ function getAggregatedData(dataset: typeof data) {
 
 const NUM_COUNTRIES = 10
 
-function getSortedAggregations(dataset: typeof data) {
+function getSortedAggregations(dataset) {
   const aggregatedData = getAggregatedData(dataset)
   const totalAggregations = Object.entries(aggregatedData).map(([country, data]) => data.aggregations)
   const topCountries = d3Array
@@ -151,7 +150,7 @@ function getSortedAggregations(dataset: typeof data) {
   return { sortedAggregations, topCountries, totalAggregations }
 }
 
-function Scatterplot(dataset: typeof data, width: number, height: number) {
+function Scatterplot(dataset, width, height) {
   // 2. handle data
   const { sortedAggregations } = getSortedAggregations(dataset)
 
@@ -176,8 +175,8 @@ function Scatterplot(dataset: typeof data, width: number, height: number) {
     .nice()
 
   // 5. create scaled accessors
-  const xAccessorScaled = (d: typeof sortedAggregations[0]) => xScale(d.averageAge ?? 7)
-  const yAccessorScaled = (d: typeof sortedAggregations[0]) => yScale(d.gold)
+  const xAccessorScaled = (d) => xScale(d.averageAge ?? 7)
+  const yAccessorScaled = (d) => yScale(d.gold)
 
   // 6. create chart
   const svg = d3
@@ -245,7 +244,7 @@ function Scatterplot(dataset: typeof data, width: number, height: number) {
     })
 }
 
-function GroupedBarChart(dataset: typeof data, width: number, height: number) {
+function GroupedBarChart(dataset, width, height) {
   // 2. handle data
   const { totalAggregations } = getSortedAggregations(dataset)
 
@@ -329,7 +328,7 @@ function GroupedBarChart(dataset: typeof data, width: number, height: number) {
       medals.map((medal) => ({
         medal,
         country: d.country,
-        value: d[medal as keyof typeof d] ?? 0,
+        value: d[medal] ?? 0,
       }))
     )
     .join("rect")
@@ -355,7 +354,7 @@ function GroupedBarChart(dataset: typeof data, width: number, height: number) {
     })
 }
 
-function Timeline(dataset: typeof data, width: number, height: number) {
+function Timeline(dataset, width, height) {
   // 2. handle data
   const { sortedAggregations } = getSortedAggregations(dataset)
 
@@ -379,8 +378,8 @@ function Timeline(dataset: typeof data, width: number, height: number) {
     .nice()
 
   // 5. create scaled accessors
-  const xAccessorScaled = (d: typeof sortedAggregations[0]) => xScale(d.year)
-  const yAccessorScaled = (d: typeof sortedAggregations[0]) => yScale(d.medals)
+  const xAccessorScaled = (d) => xScale(d.year)
+  const yAccessorScaled = (d) => yScale(d.medals)
 
   // 6. create chart
   const svg = d3
@@ -400,7 +399,7 @@ function Timeline(dataset: typeof data, width: number, height: number) {
   svg.append("g").attr("transform", `translate(${margins.left}, 0)`).call(yAxisGenerator)
 
   const lineGenerator = d3
-    .line<typeof sortedAggregations[0]>()
+    .line()
     .x((d) => xAccessorScaled(d) ?? 0)
     .y((d) => yAccessorScaled(d) ?? 0)
     .curve(d3.curveMonotoneX)
@@ -475,25 +474,26 @@ function Timeline(dataset: typeof data, width: number, height: number) {
     })
 }
 
-function Dashboard(dataset: typeof data) {
+function Dashboard(dataset) {
   //
   const filteredData = getFilteredData(dataset)
 
-  const timeline = document.querySelector("#dashboard-plot1")
-  timeline!.innerHTML = ""
-  const timelineDims = timeline!.getBoundingClientRect()
+  const timeline = document.querySelector("#dashboard-plot3")
+  timeline.innerHTML = ""
+  const timelineDims = timeline.getBoundingClientRect()
   const timelineWidth = timelineDims?.width ?? 1200
   const timelineHeight = timelineDims?.height ?? 500
 
   const groupedBar = document.querySelector("#dashboard-plot2")
-  groupedBar!.innerHTML = ""
-  const groupedBarDims = groupedBar!.getBoundingClientRect()
+  groupedBar.innerHTML = ""
+  const groupedBarDims = groupedBar.getBoundingClientRect()
   const groupedBarWidth = groupedBarDims?.width ?? 700
   const groupedBarheight = groupedBarDims?.height ?? 500
 
-  const scatterplot = document.querySelector("#dashboard-plot3")
-  scatterplot!.innerHTML = ""
-  const scatterplotDims = scatterplot!.getBoundingClientRect()
+  const scatterplot = document.querySelector("#dashboard-plot1")
+  scatterplot.innerHTML = ""
+  const scatterplotDims = scatterplot.getBoundingClientRect()
+  console.log(scatterplotDims)
   const scatterplotWidth = scatterplotDims?.width ?? 500
   const scatterplotHeight = scatterplotDims?.height ?? 500
 
@@ -509,26 +509,26 @@ const state = {
 }
 
 // year dropdown
-const yearDropdown = document.querySelector("#dashboard-plot1")
-function handleYearDropdownChange(e: any) {
+const yearDropdown = document.querySelector("#dropdown-year")
+function handleYearDropdownChange(e) {
   state.year = e.target.value
   Dashboard(data)
 }
 // country dropdown
-const countryDropdown = document.querySelector("#dashboard-plot2")
-function handleCountryDropdownChange(e: any) {
+const countryDropdown = document.querySelector("#dropdown-country")
+function handleCountryDropdownChange(e) {
   state.country = e.target.value
   Dashboard(data)
 }
 // sport dropdown
-const sportDropdown = document.querySelector("#dashboard-plot3")
-function handlSportDropdownChange(e: any) {
+const sportDropdown = document.querySelector("#dropdown-sport")
+function handlSportDropdownChange(e) {
   state.sport = e.target.value
   Dashboard(data)
 }
 
 // populate dropdowns
-function populateDropdowns(dataset: typeof data) {
+function populateDropdowns(dataset) {
   const years = d3Array.sort([...new Set(dataset.map((d) => yearAccessor(d)))], (a, b) => b - a)
   const countries = [...new Set(dataset.map((d) => countryAccessor(d)))]
   const sports = [...new Set(dataset.map((d) => sportAccessor(d)))]
@@ -537,42 +537,42 @@ function populateDropdowns(dataset: typeof data) {
   const option = document.createElement("option")
   option.value = "None"
   option.text = "None"
-  yearDropdown!.appendChild(option)
+  yearDropdown.appendChild(option)
   for (const year of years) {
     const option = document.createElement("option")
     option.value = String(year)
     option.text = String(year)
-    yearDropdown!.appendChild(option)
+    yearDropdown.appendChild(option)
   }
 
   // country dropdown
   const option2 = document.createElement("option")
   option2.value = "None"
   option2.text = "None"
-  countryDropdown!.appendChild(option2)
+  countryDropdown.appendChild(option2)
   for (const country of countries) {
     const option2 = document.createElement("option")
     option2.value = country
     option2.text = country
-    countryDropdown!.appendChild(option2)
+    countryDropdown.appendChild(option2)
   }
 
   // sport dropdown
   const option4 = document.createElement("option")
   option4.value = "None"
   option4.text = "None"
-  sportDropdown!.appendChild(option4)
+  sportDropdown.appendChild(option4)
   for (const sport of sports) {
     const option4 = document.createElement("option")
     option4.value = sport
     option4.text = sport
-    sportDropdown!.appendChild(option4)
+    sportDropdown.appendChild(option4)
   }
 
   // event listeners
-  yearDropdown!.addEventListener("change", handleYearDropdownChange)
-  countryDropdown!.addEventListener("change", handleCountryDropdownChange)
-  sportDropdown!.addEventListener("change", handlSportDropdownChange)
+  yearDropdown.addEventListener("change", handleYearDropdownChange)
+  countryDropdown.addEventListener("change", handleCountryDropdownChange)
+  sportDropdown.addEventListener("change", handlSportDropdownChange)
 }
 
 window.onload = function () {

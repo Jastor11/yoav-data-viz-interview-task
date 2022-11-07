@@ -2,23 +2,21 @@ import data from "../data"
 import * as d3 from "d3"
 import * as d3Array from "d3-array"
 
-function scatterplot(dataset: typeof data) {
+function scatterplot(dataset) {
   // 3.0 group the data by country
   const groupedData = d3Array.group(dataset, (d) => d.Team)
-  const aggregations = Object.entries(Object.fromEntries(groupedData)).map(
-    ([country, items]: [string, typeof data]) => {
-      return {
-        country,
-        medals: items.length,
-        gold: items.filter((d) => d.Medal === "Gold").length,
-        silver: items.filter((d) => d.Medal === "Silver").length,
-        bronze: items.filter((d) => d.Medal === "Bronze").length,
-        averageAge: d3Array.mean(items, (d) => d.Age),
-        averageHeight: d3Array.mean(items, (d) => d.Height),
-        averageWeight: d3Array.mean(items, (d) => d.Weight),
-      }
+  const aggregations = Object.entries(Object.fromEntries(groupedData)).map(([country, items]) => {
+    return {
+      country,
+      medals: items.length,
+      gold: items.filter((d) => d.Medal === "Gold").length,
+      silver: items.filter((d) => d.Medal === "Silver").length,
+      bronze: items.filter((d) => d.Medal === "Bronze").length,
+      averageAge: d3Array.mean(items, (d) => d.Age),
+      averageHeight: d3Array.mean(items, (d) => d.Height),
+      averageWeight: d3Array.mean(items, (d) => d.Weight),
     }
-  )
+  })
 
   // 3.1 Sort the data by number of medals and take the top 20 countries
   const sortedAggregations = d3Array.sort(aggregations, (a, b) => b.medals - a.medals).slice(0, 30)
@@ -98,28 +96,24 @@ function scatterplot(dataset: typeof data) {
     .attr("text-anchor", "start")
 }
 
-function barplot(dataset: typeof data) {
+function barplot(dataset) {
   // 3.0 group the data by country
   const groupedData = d3Array.group(dataset, (d) => d.Team)
-  const aggregations = Object.entries(Object.fromEntries(groupedData)).map(
-    ([country, items]: [string, typeof data]) => {
-      return {
-        country,
-        abbrev: items[0].NOC,
-        medals: items.length,
-        gold: items.filter((d) => d.Medal === "Gold").length,
-        silver: items.filter((d) => d.Medal === "Silver").length,
-        bronze: items.filter((d) => d.Medal === "Bronze").length,
-        averageAge: d3Array.mean(items, (d) => d.Age),
-        averageHeight: d3Array.mean(items, (d) => d.Height),
-        averageWeight: d3Array.mean(items, (d) => d.Weight),
-      }
+  const aggregations = Object.entries(Object.fromEntries(groupedData)).map(([country, items]) => {
+    return {
+      country,
+      abbrev: items[0].NOC,
+      medals: items.length,
+      gold: items.filter((d) => d.Medal === "Gold").length,
+      silver: items.filter((d) => d.Medal === "Silver").length,
+      bronze: items.filter((d) => d.Medal === "Bronze").length,
+      averageAge: d3Array.mean(items, (d) => d.Age),
+      averageHeight: d3Array.mean(items, (d) => d.Height),
+      averageWeight: d3Array.mean(items, (d) => d.Weight),
     }
-  )
+  })
 
   // 3.1 Sort the data by number of medals and take the top 20 countries
-  // const sortedAggregations = d3Array.sort(aggregations, (a, b) => b.medals - a.medals).slice(0, 20)
-  // const sortedAggregations = d3Array.sort(aggregations, (a, b) => b.medals - a.medals).slice(0, 30)
   const sortedAggregations = d3Array.sort(aggregations, (a, b) => b.medals - a.medals).slice(0, 10)
 
   const margins = { left: 50, right: 50, top: 50, bottom: 50 }
